@@ -29,4 +29,11 @@ private:
 	// Trigger volume for the door.
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* DoorTrigger;
+
+	// The actor which opens the door.
+	UPROPERTY(EditAnywhere)
+	AActor* OpeningActor;
+
+	// Opens the door.
+	void OpenDoor();
 };

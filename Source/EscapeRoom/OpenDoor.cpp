@@ -16,23 +16,30 @@ UOpenDoor::UOpenDoor()
 }
 
 
-// Called when the game starts
+// Called when the game starts.
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Open the door.
-	AActor* Owner = GetOwner();
-	FRotator NewRotation = FRotator(0.0f, -90.0f, 0);
-	Owner->SetActorRotation(NewRotation);
 }
 
 
-// Called every frame
+// Called every frame.
 void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// ...
+	// Open the door when an actor is in the trigger zone.
+	if (DoorTrigger->IsOverlappingActor(OpeningActor))
+	{
+		OpenDoor();
+	}
+}
+
+// Opens the door.
+void UOpenDoor::OpenDoor()
+{
+	AActor* Owner = GetOwner();
+	FRotator NewRotation = FRotator(0.0f, -90.0f, 0);
+	Owner->SetActorRotation(NewRotation);
 }
 
