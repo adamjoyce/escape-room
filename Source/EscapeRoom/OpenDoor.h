@@ -31,7 +31,7 @@ private:
 	ATriggerVolume* DoorTrigger;
 
 	// The actor which opens the door.
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	AActor* OpeningActor;
 
 	// Opens the door.

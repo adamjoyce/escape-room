@@ -20,6 +20,8 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OpeningActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 
@@ -39,7 +41,7 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 void UOpenDoor::OpenDoor()
 {
 	AActor* Owner = GetOwner();
-	FRotator NewRotation = FRotator(0.0f, -90.0f, 0);
+	FRotator NewRotation = FRotator(0.0f, OpenAngle, 0);
 	Owner->SetActorRotation(NewRotation);
 }
 
