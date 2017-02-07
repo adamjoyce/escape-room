@@ -5,14 +5,12 @@
 
 
 // Sets default values for this component's properties
-UOpenDoor::UOpenDoor()
+UOpenDoor::UOpenDoor() : OpenAngle(90.0f), DoorCloseDelay(1.0f), IsDoorOpen(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -22,6 +20,7 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 
 	OpeningActor = GetWorld()->GetFirstPlayerController()->GetPawn();
+	Owner = GetOwner();
 }
 
 
@@ -34,14 +33,27 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	if (DoorTrigger->IsOverlappingActor(OpeningActor))
 	{
 		OpenDoor();
+		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
+		IsDoorOpen = true;
+	}
+
+	// Check if it is time to close the door.
+	if (IsDoorOpen && (GetWorld()->GetTimeSeconds() >= (LastDoorOpenTime + DoorCloseDelay)))
+	{
+		CloseDoor();
+		IsDoorOpen = false;
 	}
 }
 
 // Opens the door.
 void UOpenDoor::OpenDoor()
 {
-	AActor* Owner = GetOwner();
-	FRotator NewRotation = FRotator(0.0f, OpenAngle, 0);
-	Owner->SetActorRotation(NewRotation);
+	Owner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
+}
+
+// Closes the door.
+void UOpenDoor::CloseDoor()
+{
+	Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 }
 
