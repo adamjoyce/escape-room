@@ -22,6 +22,10 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 private:
-	// The player controll of the pawn this component is attached to.
+	// The distance the player can grab objects in cm.
+	UPROPERTY(EditAnywhere)
+	float Reach;
+
+	// The player controller of the pawn this component is attached to.
 	APlayerController* PlayerController;
 };
