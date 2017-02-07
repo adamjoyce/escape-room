@@ -1,4 +1,4 @@
-// Copyright Adam Joyce 2017
+// Copyright Adam Joyce 2017.
 
 #pragma once
 

@@ -1,4 +1,4 @@
-// Copyright Adam Joyce 2017
+// Copyright Adam Joyce 2017.
 
 #include "EscapeRoom.h"
 #include "OpenDoor.h"
