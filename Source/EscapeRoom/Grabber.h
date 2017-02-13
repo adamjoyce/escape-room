@@ -37,4 +37,7 @@ private:
 
 	// Grabs an object within reach.
 	void Grab();
+
+	// Releases a grabbed object.
+	void Release();
 };
