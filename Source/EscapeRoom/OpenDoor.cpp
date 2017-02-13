@@ -31,7 +31,7 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	// Open the door when an actor is in the trigger zone.
+	/// Open the door when an actor is in the trigger zone.
 	if (DoorTrigger->IsOverlappingActor(OpeningActor))
 	{
 		OpenDoor();
@@ -39,7 +39,7 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 		IsDoorOpen = true;
 	}
 
-	// Check if it is time to close the door.
+	/// Check if it is time to close the door.
 	if (IsDoorOpen && (GetWorld()->GetTimeSeconds() >= (LastDoorOpenTime + DoorCloseDelay)))
 	{
 		CloseDoor();
