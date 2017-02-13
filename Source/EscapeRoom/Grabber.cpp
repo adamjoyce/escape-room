@@ -5,7 +5,8 @@
 
 
 // Sets default values for this component's properties.
-UGrabber::UGrabber() : Reach(100.0f)
+UGrabber::UGrabber() : Reach(100.0f),
+					   PhysicsHandle(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -20,6 +21,11 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	PlayerController = GetWorld()->GetFirstPlayerController();
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle component"), *(GetOwner()->GetName()));
+	}
 }
 
 

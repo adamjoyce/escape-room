@@ -26,6 +26,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	float Reach;
 
+	// The physics handle component of the parent object.
+	UPhysicsHandleComponent* PhysicsHandle;
+
 	// The player controller of the pawn this component is attached to.
 	APlayerController* PlayerController;
 };
