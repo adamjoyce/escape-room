@@ -31,6 +31,21 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+
+	/* THIS NEED REFACTORING - REPEATED CODE... */
+	/// Get the player's viewpoint.
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	PlayerController->GetPlayerViewPoint(PlayerViewPointLocation, PlayerViewPointRotation);
+
+	/// Draw out grab line.
+	const FVector LineTraceEnd = PlayerViewPointLocation + (PlayerViewPointRotation.Vector() * Reach);
+	/* REFACTOR ENDS */
+
+	if (PhysicsHandle->GrabbedComponent)
+	{
+		PhysicsHandle->SetTargetLocation(LineTraceEnd);
+	}
 }
 
 // Finds the attached physics handle component.
@@ -88,7 +103,7 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *(ActorHit->GetName()));
 	}
 
-	return FHitResult();
+	return Hit;
 }
 
 // Grabs an object within reach.
@@ -97,11 +112,19 @@ void UGrabber::Grab()
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
 
 	/// Line trace for any physics bodies within reach.
-	GetFirstPhysicsBodyInReach();
+	const FHitResult HitResult = GetFirstPhysicsBodyInReach();
+	const AActor* ActorHit = HitResult.GetActor();
+	if (ActorHit)
+	{
+		/// Grab hit component at its actor location.
+		UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+		PhysicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true);
+	}
 }
 
 // Releases a grabbed object.
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab released"));
+	PhysicsHandle->ReleaseComponent();
 }
