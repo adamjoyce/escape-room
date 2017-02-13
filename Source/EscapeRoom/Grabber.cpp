@@ -22,24 +22,8 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	PlayerController = GetWorld()->GetFirstPlayerController();
-
-	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (!PhysicsHandle)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle component"), *(GetOwner()->GetName()));
-	}
-
-	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
-	if (InputComponent)
-	{
-		/// Bind input actions.
-		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
-		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s missing InputComponent"), *(GetOwner()->GetName()));
-	}
+	FindPhysicsHandleComponent();
+	SetupInputComponent();
 }
 
 
@@ -47,7 +31,37 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+}
 
+// Finds the attached physics handle component.
+void UGrabber::FindPhysicsHandleComponent()
+{
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle component"), *(GetOwner()->GetName()));
+	}
+}
+
+// Sets up the owner's input component.
+void UGrabber::SetupInputComponent()
+{
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		/// Bind input actions.
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
+	} 
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s missing InputComponent"), *(GetOwner()->GetName()));
+	}
+}
+
+// Returns hit for first physics body within reach.
+const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
+{
 	/// Get the player's viewpoint.
 	FVector PlayerViewPointLocation;
 	FRotator PlayerViewPointRotation;
@@ -73,12 +87,17 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *(ActorHit->GetName()));
 	}
+
+	return FHitResult();
 }
 
 // Grabs an object within reach.
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grab pressed"));
+
+	/// Line trace for any physics bodies within reach.
+	GetFirstPhysicsBodyInReach();
 }
 
 // Releases a grabbed object.

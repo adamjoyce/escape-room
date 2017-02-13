@@ -35,6 +35,15 @@ private:
 	// The player controller of the pawn this component is attached to.
 	APlayerController* PlayerController;
 
+	// Finds the attached physics handle component.
+	void FindPhysicsHandleComponent();
+
+	// Sets up the owner's input component.
+	void SetupInputComponent();
+
+	// Returns hit for first physics body within reach.
+	const FHitResult GetFirstPhysicsBodyInReach();
+
 	// Grabs an object within reach.
 	void Grab();
 
