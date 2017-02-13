@@ -6,6 +6,7 @@
 
 // Sets default values for this component's properties.
 UGrabber::UGrabber() : Reach(100.0f),
+					   InputComponent(nullptr),
 					   PhysicsHandle(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -21,10 +22,22 @@ void UGrabber::BeginPlay()
 	Super::BeginPlay();
 
 	PlayerController = GetWorld()->GetFirstPlayerController();
+
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 	if (!PhysicsHandle)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s missing PhysicsHandle component"), *(GetOwner()->GetName()));
+	}
+
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		/// Bind the input actions.
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s missing InputComponent"), *(GetOwner()->GetName()));
 	}
 }
 
@@ -61,3 +74,8 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	}
 }
 
+// Grabs an object within reach.
+void UGrabber::Grab()
+{
+	UE_LOG(LogTemp, Warning, TEXT("GRAB"));
+}

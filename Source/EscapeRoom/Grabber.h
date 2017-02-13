@@ -26,9 +26,15 @@ private:
 	UPROPERTY(EditAnywhere)
 	float Reach;
 
-	// The physics handle component of the parent object.
+	// The input component of the attached object
+	UInputComponent* InputComponent;
+
+	// The physics handle component of the attached object.
 	UPhysicsHandleComponent* PhysicsHandle;
 
 	// The player controller of the pawn this component is attached to.
 	APlayerController* PlayerController;
+
+	// Grabs an object within reach.
+	void Grab();
 };
