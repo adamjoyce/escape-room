@@ -6,11 +6,9 @@
 
 
 // Sets default values for this component's properties
-UOpenDoor::UOpenDoor() : OpenAngle(70.0f), 
-						 DoorCloseDelay(1.0f), 
-						 DoorTrigger(nullptr),
-						 Owner(nullptr),
-						 IsDoorOpen(false)
+UOpenDoor::UOpenDoor() : DoorTrigger(nullptr),
+						 TriggerMass(30.0f),
+						 Owner(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -37,20 +35,11 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 
-	/// Open the door when an actor is in the trigger zone.
-	if (GetTotalMassOfActorOnPlate() > 30.0f)
-	{
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetTimeSeconds();
-		IsDoorOpen = true;
-	}
-
-	/// Check if it is time to close the door.
-	if (IsDoorOpen && (GetWorld()->GetTimeSeconds() >= (LastDoorOpenTime + DoorCloseDelay)))
-	{
-		CloseDoor();
-		IsDoorOpen = false;
-	}
+	/// Opens/closes the door based on total mass in trigger zone.
+	if (GetTotalMassOfActorOnPlate() > TriggerMass)
+		OnOpen.Broadcast();
+	else 
+		OnClose.Broadcast();
 }
 
 // Returns the total mass in the trigger volume.
@@ -72,18 +61,5 @@ float UOpenDoor::GetTotalMassOfActorOnPlate()
 	}
 
 	return TotalMass;
-}
-
-// Opens the door.
-void UOpenDoor::OpenDoor()
-{
-	//Owner->SetActorRotation(FRotator(0.0f, OpenAngle, 0.0f));
-	OnOpenRequest.Broadcast();
-}
-
-// Closes the door.
-void UOpenDoor::CloseDoor()
-{
-	Owner->SetActorRotation(FRotator(0.0f, 0.0f, 0.0f));
 }
 
