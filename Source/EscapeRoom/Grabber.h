@@ -41,6 +41,12 @@ private:
 	// Sets up the owner's input component.
 	void SetupInputComponent();
 
+	// Returns the start location of the reach line (the player's viewpoint location).
+	FVector GetReachLineStart();
+
+	// Returns the end location of the reach line.
+	FVector GetReachLineEnd();
+
 	// Returns hit for first physics body within reach.
 	const FHitResult GetFirstPhysicsBodyInReach();
 
