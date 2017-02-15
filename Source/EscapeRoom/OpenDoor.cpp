@@ -6,7 +6,7 @@
 
 
 // Sets default values for this component's properties
-UOpenDoor::UOpenDoor() : OpenAngle(90.0f), 
+UOpenDoor::UOpenDoor() : OpenAngle(70.0f), 
 						 DoorCloseDelay(1.0f), 
 						 IsDoorOpen(false)
 {
