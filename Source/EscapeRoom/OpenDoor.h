@@ -34,14 +34,14 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* DoorTrigger;
 
+	// The door with this component class attached.
+	AActor* Owner;
+
 	// Time since the game began at which the door was last open.
 	float LastDoorOpenTime;
 
 	// True if the door is open.
 	bool IsDoorOpen;
-
-	// The door with this component class attached.
-	AActor* Owner;
 
 	// Returns the total mass in the trigger volume.
 	float GetTotalMassOfActorOnPlate();

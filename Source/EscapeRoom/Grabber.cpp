@@ -7,7 +7,8 @@
 // Sets default values for this component's properties.
 UGrabber::UGrabber() : Reach(100.0f),
 					   InputComponent(nullptr),
-					   PhysicsHandle(nullptr)
+					   PhysicsHandle(nullptr),
+					   PlayerController(nullptr)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -19,7 +20,13 @@ UGrabber::UGrabber() : Reach(100.0f),
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
+
 	PlayerController = GetWorld()->GetFirstPlayerController();
+	if (!PlayerController)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Scene missing Player Controller"));
+	}
+
 	FindPhysicsHandleComponent();
 	SetupInputComponent();
 }
@@ -28,6 +35,9 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
+
+	/// Returns if there is no Physics Handle on the owning component.
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());
@@ -99,6 +109,9 @@ void UGrabber::Grab()
 	{
 		/// Grab hit component (mesh) at its actor location.
 		UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+
+		/// Returns if there is no Physics Handle on the owning component.
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true);
 	}
 }
@@ -106,5 +119,7 @@ void UGrabber::Grab()
 // Releases a grabbed object.
 void UGrabber::Release()
 {
+	/// Returns if there is no Physics Handle on the owning component.
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }

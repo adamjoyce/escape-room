@@ -8,6 +8,8 @@
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor() : OpenAngle(70.0f), 
 						 DoorCloseDelay(1.0f), 
+						 DoorTrigger(nullptr),
+						 Owner(nullptr),
 						 IsDoorOpen(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -22,6 +24,11 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	Owner = GetOwner();
+
+	if (!DoorTrigger)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Door missing trigger zone"));
+	}
 }
 
 
@@ -46,21 +53,22 @@ void UOpenDoor::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompo
 	}
 }
 
-//
+// Returns the total mass in the trigger volume.
 float UOpenDoor::GetTotalMassOfActorOnPlate()
 {
 	float TotalMass = 0.0f;
 
-	// Get all actors in the door trigger zone.
+	/// Get all actors in the door trigger zone.
 	TArray<AActor*> OverlappingActors;
+	if (!DoorTrigger) { return 0.0f; }
 	DoorTrigger->GetOverlappingActors(OverlappingActors);
 
-	// Calculate combined mass of overlapping actors.
+	/// Calculate combined mass of overlapping actors.
 	FString OverlappingNames;
 	for (const auto* Actor : OverlappingActors)
 	{
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
-		UE_LOG(LogTemp, Warning, TEXT("%s in trigger zone"), *(Actor->GetName()));
+		//UE_LOG(LogTemp, Warning, TEXT("%s in trigger zone"), *(Actor->GetName()));
 	}
 
 	return TotalMass;
