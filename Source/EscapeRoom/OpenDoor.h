@@ -43,8 +43,8 @@ private:
 	// The door with this component class attached.
 	AActor* Owner;
 
-	// The actor which opens the door.
-	AActor* OpeningActor;
+	// Returns the total mass in the trigger volume.
+	float GetTotalMassOfActorOnPlate();
 
 	// Opens the door.
 	void OpenDoor();
