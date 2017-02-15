@@ -19,7 +19,6 @@ UGrabber::UGrabber() : Reach(100.0f),
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
-
 	PlayerController = GetWorld()->GetFirstPlayerController();
 	FindPhysicsHandleComponent();
 	SetupInputComponent();
@@ -29,7 +28,6 @@ void UGrabber::BeginPlay()
 void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction )
 {
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
-
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());
